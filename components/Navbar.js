@@ -1,7 +1,3 @@
-import Image from "next/image";
-import React from "react";
-import logo from "../../public/logo.png";
-
 const Navbar = () => {
   return (
     <div className="h-12  px-6 py-7 flex items-center border-b border-gray-600 ">

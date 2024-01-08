@@ -1,34 +1,28 @@
 "use client";
-import MovieCard from "@/app/components/MovieCard.js";
+import MovieCard from "@/components/MovieCard.js";
+import useDebounce from "@/hooks/useDebounce.js";
+import { useMemo, useState } from "react";
 import { movies } from "../../../movie_data.js";
-import { useCallback, useEffect, useState } from "react";
 
 const UsingUseState = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterList, setFilterList] = useState([]);
+  const debounceSearchQuery = useDebounce(searchQuery);
 
-  const handleChange = useCallback(() => {
-    const filterData = movies.filter((movie) => {
-      return movie.title.toLowerCase().includes(searchQuery.toLowerCase()) || movie.genre.toLowerCase().includes(searchQuery.toLowerCase())
-    });
-    setFilterList(filterData);
-  }, [searchQuery]);
-
-  // EFFECT: Search Handler
-  useEffect(() => {
-    // Debounce search handler
-    const timer = setTimeout(() => {
-      handleChange();
-    }, 500);
-
-    // Cleanup
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [handleChange]);
+  const filterData = useMemo(
+    () =>
+      movies.filter((movie) => {
+        return (
+          movie.title
+            .toLowerCase()
+            .includes(debounceSearchQuery.toLowerCase()) ||
+          movie.genre.toLowerCase().includes(debounceSearchQuery.toLowerCase())
+        );
+      }),
+    [debounceSearchQuery]
+  );
 
   return (
-    <div className="flex flex-col items-start gap-y-3">
+    <div className=" flex flex-col items-start gap-y-3">
       <h1 className="text-2xl font-bold">
         Client Side Search bar using useState Hook
       </h1>
@@ -42,9 +36,10 @@ const UsingUseState = () => {
         onChange={(e) => setSearchQuery(e.target.value)}
       />
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 mx-auto sm:gap-x-8 lg:gap-x-12 sm:gap-y-6  gap-x-4 gap-y-3  mt-2 sm:mt-4 place-items-center">
-        {searchQuery.length > 0
-          ? filterList.map((movie) => (
+      <section className="w-full h-full flex  justify-center ">
+        <div className="grid grid-cols-2 sm:grid-cols-3 mx-auto sm:gap-x-8 lg:gap-x-12 sm:gap-y-6  gap-x-4 gap-y-3  mt-2 sm:my-4  ">
+          {debounceSearchQuery.length === 0 ? (
+            movies.map((movie) => (
               //------------------ Movie card---------------------------------
               <MovieCard
                 key={movie.id}
@@ -56,7 +51,10 @@ const UsingUseState = () => {
                 plot={movie.plot}
               />
             ))
-          : movies.map((movie) => (
+          ) : filterData.length === 0 ? (
+            <p className="">No movies found</p>
+          ) : (
+            filterData.map((movie) => (
               //------------------ Movie card---------------------------------
               <MovieCard
                 key={movie.id}
@@ -67,8 +65,10 @@ const UsingUseState = () => {
                 type={movie.type}
                 plot={movie.plot}
               />
-            ))}
-      </div>
+            ))
+          )}
+        </div>
+      </section>
     </div>
   );
 };
