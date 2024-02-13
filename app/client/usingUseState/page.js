@@ -24,7 +24,7 @@ const UsingUseState = () => {
   return (
     <div className=" flex flex-col items-start gap-y-3">
       <h1 className="text-2xl font-bold">
-        Client Side Search bar using useState Hook
+        Client Side Search functionality using useState Hook
       </h1>
       {/* ------------------------search bar------------------------------------ */}
 

@@ -1,7 +1,9 @@
+import Link from "next/link.js";
+
 const Navbar = () => {
   return (
     <div className="h-12  px-6 py-7 flex items-center border-b border-gray-600 ">
-      <div className="flex-1 flex items-center gap-x-3">
+      <Link href="/" className="flex-1 flex items-center gap-x-3">
         <div className="h-10 w-10 text-white">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <path
@@ -10,8 +12,8 @@ const Navbar = () => {
           />
         </svg>
         </div>
-        <h5 className="text-lg  font-bold">Search bar with NextJS 13</h5>
-      </div>
+        <h5 className="text-lg  font-bold">Search bar with NextJS</h5>
+      </Link>
     </div>
   );
 };
